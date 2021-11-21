@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <section class="login-page" id="login-page">
+    <header>
+        <h1 class="text-5xl text-center	mt-16">Welcome to my <span class="font-bold	text-purple-600	">Bank</span>!!!</h1>
+    </header>
+    <main>
+        <section class="bg-yellow-300 w-2/3	 mx-auto mt-8 p-8">
+            <h3 class="text-3xl mb-4 text-center font-semibold text-purple-600">Please Login</h3>
+            <div class="flex flex-col justify-start">
+                <input id="user-email" class="block bg-yellow-50 border border-gray-400 rounded w-2/5 mb-4 px-2 mx-auto h-8" type="text" placeholder="Your Email">
+                <input id="user-password" class="block bg-yellow-50 border border-gray-400 rounded w-2/5 mb-4 px-2 mx-auto h-8" type="password" placeholder="Password">
+                <button id="submit-btn" class="bg-purple-600 text-white font-medium px-4 py-2 rounded mx-auto">Submit</button>
+            </div>
+        </section>
+    </main>
+  </section>
+
+
+    <section class="bank-page hidden" id="bank-page">
+        <header>
+            <h1 class="text-5xl text-center	mt-16">Let's get some <span class="font-bold	text-purple-600	">Moooooney</span>!!!</h1>
+        </header>
+        <main class=" w-3/4 mx-auto">
+            
+            <!-- balance and transaction -->
+            <section class="mt-8">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-yellow-300 p-8 rounded text-white font-medium">
+                        <h3 class="text-2xl">
+                            Deposit
+                        </h3>
+                        <h4 class="text-4xl">
+                            $<span id="deposit-amount">00
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="bg-green-300 p-8 rounded text-white  font-medium">
+                        <h3 class="text-2xl">
+                            Withdraw
+                        </h3>
+                        <h4 class="text-4xl">
+                            $<span id="withdraw-amount">00</span>
+                        </h4>
+                    </div>
+                    <div class="bg-blue-400 p-8 rounded text-white  font-medium">
+                        <h3 class="text-2xl">
+                            Balance
+                        </h3>
+                        <h4 class="text-4xl">
+                            $<span id="balance-amount">1240</span>
+                        </h4>
+                    </div>
+                </div>
+            </section>
+    
+            <!-- deposit and Withdraw -->
+            <section class="my-8">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-red-100 p-8 rounded">
+                        <h3 class="text-2xl mb-4">
+                            Please Deposit
+                        </h3>
+                        <div>
+                            <input id="deposit-input" class="block bg-yellow-50 border border-gray-400 rounded w-3/4 mb-4 h-8 px-4" type="text" placeholder="$ Amount you want to deposit">
+                            <button id="deposit-btn" class="bg-purple-600 text-white font-medium px-4 py-2 rounded mx-auto">Deposit</button>
+                        </div>
+                    </div>
+    
+                    <div class="bg-purple-100 p-8 rounded">
+                        <h3 class="text-2xl mb-4">
+                            Please Withdraw
+                        </h3>
+                        <div>
+                            <input id="withdraw-input" class="block bg-yellow-50 border border-gray-400 rounded w-3/4 mb-4 h-8 px-4" type="text" placeholder="$ Amount you want to withdraw">
+                            <button id="withdraw-btn" class="bg-purple-600 text-white font-medium px-4 py-2 rounded mx-auto">Withdraw</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <script>
+        //index
+document.getElementById('submit-btn').addEventListener('click', function () {
+
+//get user email
+const emailField = document.getElementById('user-email');
+const userEmail = emailField.value;
+
+//get user password
+const passwordField = document.getElementById('user-password');
+const userPassword = passwordField.value;
+
+//check email & password
+if (userEmail == 'abdur@gmail.com' && userPassword == 'secret') {
+    const loginPage = document.getElementById('login-page');
+    const bankPage = document.getElementById('bank-page');
+    loginPage.style.display = "none";
+    bankPage.style.display = "block";
+}
+else{
+    alert('Email or password is incorrect');
+}
+});
+</script>
+
+<script>
+    function getInnerTextValue(fieldId) {
+const fieldTag = document.getElementById(fieldId);
+const fieldValueInText = fieldTag.innerText;
+const value = parseFloat(fieldValueInText);
+return value;
+}
+function getInputValue(fieldId) {
+const inputField = document.getElementById(fieldId);
+const valueInText = inputField.value;
+const value = parseFloat(valueInText);
+inputField.value = '';
+return value;
+}
+function updateTotal(fieldId, amount) {
+const previousTotal = getInnerTextValue(fieldId);
+const newTotal = previousTotal + amount;
+document.getElementById(fieldId).innerText = newTotal;
+}
+function updateBalance(amount, isAdding) {
+const initialBalance = 1240;
+const currentDeposit = getInnerTextValue('deposit-amount');
+const currentWithdraw = getInnerTextValue('withdraw-amount');
+let newBalance = currentDeposit - currentWithdraw + initialBalance;
+document.getElementById('balance-amount').innerText = newBalance;
+}
+
+document.getElementById('deposit-btn').addEventListener('click', function () {
+const amount = getInputValue('deposit-input');
+if (amount > 0) {
+    updateTotal('deposit-amount', amount);
+    updateBalance(amount,true);
+}
+})
+
+document.getElementById('withdraw-btn').addEventListener('click', function () {
+const amount = getInputValue('withdraw-input');
+const balance = getInnerTextValue('balance-amount')
+if (amount > 0 && amount <= balance) {
+    updateTotal('withdraw-amount', amount);
+    updateBalance(amount,false);
+}
+})
+</script>
+</body>
+</html>
